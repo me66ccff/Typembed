@@ -6,6 +6,8 @@ Typembed 是为 Typecho 添加对在线视频支持的一款插件（支持手�
 
 直接粘贴视频播放页完整的URL到编辑器（单独一行），就可以加载视频播放器（不能在编辑器里实时渲染，文章发布之后可以看到效果）。
 
+修改后效果：http://blog.lll-studio.com/2017/02/04/Typembed%E4%BF%AE%E6%94%B9.html
+
 项目主页：http://www.fengziliu.com/typembed.html
 
 效果展示：http://www.fengziliu.com/da-hai.html
