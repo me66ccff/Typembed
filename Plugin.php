@@ -2,18 +2,17 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * Typembed 视频播放插件
- *
+ * 
  * @package Typembed
  * @author Fengzi
- * @version 1.0.9
+ * @version 1.0.6
  * @dependence 13.12.12-*
  * @link http://www.fengziliu.com/typembed.html
  */
 class Typembed_Plugin implements Typecho_Plugin_Interface{
-
     /**
      * 激活插件方法,如果激活失败,直接抛出异常
-     *
+     * 
      * @access public
      * @return void
      * @throws Typecho_Plugin_Exception
@@ -22,15 +21,15 @@ class Typembed_Plugin implements Typecho_Plugin_Interface{
         Typecho_Plugin::factory('Widget_Abstract_Contents')->contentEx = array('Typembed_Plugin', 'parse');
         Typecho_Plugin::factory('Widget_Abstract_Contents')->excerptEx = array('Typembed_Plugin', 'parse');
     }
-
+    
     public static function parse($content, $widget, $lastResult){
         $content = empty($lastResult) ? $content : $lastResult;
         if ($widget instanceof Widget_Archive){
-            $content = preg_replace_callback('/<p>(?:(?:<a[^>]+>)?(?<video_url>(?:(http|https):\/\/)+[a-z0-9_\-\/\.\?%#=]+)(?:<\/a>)?)<\/p>/si', array('Typembed_Plugin', 'parseCallback'), $content);
+            $content = preg_replace_callback('/<p>(?:(?:<a[^>]+>)?(?<video_url>(?:(http|https):\/\/)+[a-z0-9_\-\/.%]+)(?:<\/a>)?)<\/p>/si', array('Typembed_Plugin', 'parseCallback'), $content);
         }
         return $content;
     }
-
+    
     public static function parseCallback($matches){
         $no_html5 = array(
             'www.le.com', 
@@ -170,10 +169,10 @@ class Typembed_Plugin implements Typecho_Plugin_Interface{
 
         
     }
-
+    
     /**
      * 禁用插件方法,如果禁用失败,直接抛出异常
-     *
+     * 
      * @static
      * @access public
      * @return void
@@ -183,13 +182,13 @@ class Typembed_Plugin implements Typecho_Plugin_Interface{
 
     /**
      * 获取插件配置面板
-     *
+     * 
      * @access public
      * @param Typecho_Widget_Helper_Form $form 配置面板
      * @return void
      */
     public static function config(Typecho_Widget_Helper_Form $form){
-        $typembed_code = Typecho_Widget::widget('Widget_Options')->plugin('Typembed')->typembed_code;
+        //$options = Helper::options();
         $width = new Typecho_Widget_Helper_Form_Element_Text('width', NULL, '100%', _t('播放器宽度'));
         $form->addInput($width);
         $height = new Typecho_Widget_Helper_Form_Element_Text('height', NULL, '500', _t('播放器高度'));
@@ -198,35 +197,20 @@ class Typembed_Plugin implements Typecho_Plugin_Interface{
         $form->addInput($mobile_width);
         $mobile_height = new Typecho_Widget_Helper_Form_Element_Text('mobile_height', NULL, '250', _t('移动设备播放器高度'));
         $form->addInput($mobile_height);
-        if(in_array(strtolower(md5($typembed_code)), array('dc9beb84559e75df480b70c3f31ff6cb', '6a78fa2523ca58180ede636aa948bc58', '90b82edf68dcb27b4014ed6b751bb2e5', 'cff968058df7dc08c5c54050ee0c3829', '92420638bb657827490783196a0d263c'))){
-            $typembed_code_text = new Typecho_Widget_Helper_Form_Element_Hidden('typembed_code', NULL, '', _t('高级功能激活码'));
-            $form->addInput($typembed_code_text);
-            $jump_play = new Typecho_Widget_Helper_Form_Element_Radio('jump_play', array(
-                1   =>  _t('启用'),
-                0   =>  _t('关闭')
-            ), 0, _t('跳转播放'), _t('手机端不支持H5播放的视频，将跳转到源网站播放'));
-            $form->addInput($jump_play->addRule('enum', _t('必须选择一个模式'), array(0, 1)));
-        }else{
-            $typembed_code_text = new Typecho_Widget_Helper_Form_Element_Text('typembed_code', NULL, '', _t('高级功能激活码'), _t('升级到<a href="http://www.fengziliu.com/typembed.html" target="_blank">最新版本</a>，填入激活码保存后可开启高级功能。<br />
-激活码关注微信公众号“<a href="http://www.rifuyiri.net/wp-content/uploads/2014/08/972e6fb0794d359.jpg" target="_blank">ri-fu-yi-ri</a>”回复“Smartideo Code”即可获得～'));
-            $form->addInput($typembed_code_text);
-            $jump_play = new Typecho_Widget_Helper_Form_Element_Hidden('jump_play', NULL, 0);
-            $form->addInput($jump_play->addRule('enum', _t('必须选择一个模式'), array(0, 1)));
-        }
     }
-
+    
     /**
      * 个人用户的配置面板
-     *
+     * 
      * @access public
      * @param Typecho_Widget_Helper_Form $form
      * @return void
      */
     public static function personalConfig(Typecho_Widget_Helper_Form $form){}
-
+    
     /**
      * 移动设备识别
-     *
+     * 
      * @return boolean
      */
     private static function isMobile(){
